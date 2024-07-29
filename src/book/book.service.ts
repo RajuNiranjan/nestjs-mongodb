@@ -4,6 +4,7 @@ import { UpdateBookDto } from './dto/update-book.dto';
 import { Model } from 'mongoose';
 import { Book } from './schema/book.schema';
 import { InjectModel } from '@nestjs/mongoose';
+import { Query } from 'express-serve-static-core';
 
 @Injectable()
 export class BookService {
@@ -27,8 +28,17 @@ export class BookService {
     return book;
   }
 
-  async findAllBooks(): Promise<Book[]> {
-    return await this.bookModel.find();
+  async findAllBooks(query: Query): Promise<Book[]> {
+    const keyword = query.keyword
+      ? {
+          title: {
+            $regex: query.keyword,
+            $options: 'i',
+          },
+        }
+      : {};
+
+    return await this.bookModel.find(keyword);
   }
 
   async findOneBook(id: string): Promise<Book> {
