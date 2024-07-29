@@ -5,6 +5,7 @@ import { Model } from 'mongoose';
 import { Book } from './schema/book.schema';
 import { InjectModel } from '@nestjs/mongoose';
 import { Query } from 'express-serve-static-core';
+import { User } from 'src/auth/schema/user.schema';
 
 @Injectable()
 export class BookService {
@@ -12,18 +13,14 @@ export class BookService {
     @InjectModel(Book.name) private readonly bookModel: Model<Book>,
   ) {}
 
-  async createNewBook(createBookDto: CreateBookDto): Promise<Book> {
+  async createNewBook(createBookDto: CreateBookDto, user: User): Promise<Book> {
+    const data = Object.assign(createBookDto, { user: user._id });
+
     const { title, desc, author, price, category } = createBookDto;
     if (!title || !desc || !author || !price || !category) {
       throw new NotFoundException('All fields requred');
     }
-    const book = await this.bookModel.create({
-      title,
-      desc,
-      author,
-      price,
-      category,
-    });
+    const book = await this.bookModel.create(data);
 
     return book;
   }
