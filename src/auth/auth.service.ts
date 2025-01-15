@@ -5,7 +5,7 @@ import { Model } from 'mongoose';
 import { LogInDto } from 'src/dto/Auth/LogIn.dto';
 import { SignUpDto } from 'src/dto/Auth/SignUp.dto';
 import { UpdateProfileDto } from 'src/dto/Auth/UpdateProfile.dto';
-import { User } from 'src/models/auth.model';
+import { User } from 'src/auth/models/auth.model';
 import * as bcrypt from 'bcrypt';
 
 @Injectable()
